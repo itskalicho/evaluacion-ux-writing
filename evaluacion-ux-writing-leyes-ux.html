@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Chequeo UX Writing + Ley de Prägnanz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray: #95a5a6;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+            --prägnanz: #9b59b6;
+            --miller: #FA5053;
+            --jakob: #27ae60;
+            --fitts: #e67e22;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(120deg, var(--primary) 0%, #1a2530 100%);
+            color: white;
+            padding: 35px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--light);
+            font-weight: 300;
+        }
+        
+        .website-info {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .checklist-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .category {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category.prägnanz h2 {
+            border-bottom: 3px solid var(--prägnanz);
+        }
+        
+        .category h2 i {
+            color: var(--secondary);
+        }
+        
+        .category.prägnanz h2 i {
+            color: var(--prägnanz);
+        }
+
+        .category.miller h2 {
+            border-bottom: 3px solid var(--miller);
+        }
+
+        .category.miller h2 i {
+            color: var(--miller);
+        }
+
+        .category.miller .item-score {
+            background: var(--miller);
+        }
+
+        .category.jakob h2 {
+            border-bottom: 3px solid var(--jakob);
+        }
+
+        .category.jakob h2 i {
+            color: var(--jakob);
+        }
+
+        .category.jakob .item-score {
+            background: var(--jakob);
+        }
+
+        .category.fitts h2 {
+            border-bottom: 3px solid var(--fitts);
+        }
+
+        .category.fitts h2 i {
+        color: var(--fitts);
+        }
+
+        .category.fitts .item-score {
+        background: var(--fitts);
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .check-item:hover {
+            background: #f8f9fa;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .check-item input[type="checkbox"] {
+            margin-right: 18px;
+            margin-top: 5px;
+            transform: scale(1.4);
+            cursor: pointer;
+        }
+        
+        .check-item label {
+            flex: 1;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1.05rem;
+        }
+        
+        .item-score {
+            background: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .category.prägnanz .item-score {
+            background: var(--prägnanz);
+        }
+        
+        .notes {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: var(--gray);
+            font-style: italic;
+            padding-left: 40px;
+        }
+        
+        .status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 25px;
+            background: var(--light);
+            border-top: 1px solid #ddd;
+        }
+        
+        .progress {
+            flex: 1;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 10px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, #27ae60 100%);
+            border-radius: 12px;
+            width: 0%;
+            transition: width 0.7s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score-display {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            margin-left: 20px;
+            min-width: 150px;
+        }
+        
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .score-label {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-save {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-reset {
+            background: var(--gray);
+            color: white;
+        }
+        
+        .btn-save:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reset:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        .principles-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tab-color);
+        }
+        
+        .principles-info h3 {
+            color: var(--tab-color);
+            margin-bottom: 15px;
+        }
+
+        #praganz {
+            --tab-color: var(--prägnanz);
+        }
+
+        #miller {
+            --tab-color: #FA5053;
+        }
+
+        #jakob {
+            --tab-color: #27ae60;
+        }
+
+        #fitts {
+            --tab-color: #e67e22;
+        }
+        
+        @media (max-width: 900px) {
+            .status {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .score-display {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .checklist-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+        
+        .pulse {
+            animation: pulseAnimation 1.5s infinite;
+        }
+        
+        @keyframes pulseAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-check-double"></i> Lista de Chequeo UX Writing + Prägnanz + Miller + Jakob + Fitts</h1>
+            <p class="description">Evaluación de componentes de UX Writing, principios de la Ley de Prägnanz, Ley de Miller, Ley de Jakob y Ley de Fitts</p>
+            <div class="website-info">
+                <i class="fas fa-globe"></i> https://www.epssanitas.com/
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="ux-writing">UX Writing</div>
+            <div class="tab" data-tab="praganz">Ley de Prägnanz</div>
+            <div class="tab" data-tab="miller">Ley de Miller</div>
+            <div class="tab" data-tab="jakob">Ley de Jakob</div>
+            <div class="tab" data-tab="fitts">Ley de Fitts</div>
+            <div class="tab" data-tab="results">Resultados</div>
+        </div>
+        
+        <div class="tab-content active" id="ux-writing">
+            <div class="checklist-container">
+                <div class="category">
+                    <h2><i class="fas fa-clarity"></i> Claridad y Comprensión</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item1" data-score="5">
+                        <label for="item1">El lenguaje es claro y fácil de entender <span class="item-score">5 pts</span></label>
+                        <div class="notes">El texto evita jerga técnica innecesaria</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item2" data-score="4">
+                        <label for="item2">Los títulos y subtítulos describen accurately el contenido <span class="item-score">4 pts</span></label>
+                        <div class="notes">Los usuarios pueden escanear y entender rápidamente</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item3" data-score="6">
+                        <label for="item3">Las instrucciones son concisas y fáciles de seguir <span class="item-score">6 pts</span></label>
+                        <div class="notes">Especialmente en procesos como compra o registro</div>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2><i class="fas fa-consistency"></i> Consistencia</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item4" data-score="5">
+                        <label for="item4">Mantiene un tono y voz coherentes en todo el sitio <span class="item-score">5 pts</span></label>
+                        <div class="notes">La personalidad de la marca se expresa consistentemente</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item5" data-score="4">
+                        <label for="item5">Terminología consistente para elementos similares <span class="item-score">4 pts</span></label>
+                        <div class="notes">Por ejemplo, siempre "Añadir al carrito" en lugar de variaciones</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item6" data-score="3">
+                        <label for="item6">Estilo de escritura uniforme en botones, enlaces y etiquetas <span class="item-score">3 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2><i class="fas fa-hierarchy"></i> Jerarquía y Escaneabilidad</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item7" data-score="4">
+                        <label for="item7">La información está organizada con una jerarquía visual clara <span class="item-score">4 pts</span></label>
+                        <div class="notes">Encabezados, subencabezados y cuerpo de texto bien diferenciados</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item8" data-score="3">
+                        <label for="item8">Uso efectivo de listas y elementos visuales para romper texto <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item9" data-score="5">
+                        <label for="item9">El contenido permite escaneo rápido para usuarios que no leen todo <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2><i class="fas fa-user-oriented"></i> Orientación al Usuario</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item10" data-score="6">
+                        <label for="item10">El lenguaje se centra en beneficios para el usuario <span class="item-score">6 pts</span></label>
+                        <div class="notes">Enfocado en "qué obtiene el usuario" en lugar de "qué ofrece la empresa"</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item11" data-score="5">
+                        <label for="item11">Los mensajes de error son útiles y sugieren soluciones <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item12" data-score="4">
+                        <label for="item12">Textos orientados a acción con verbos claros <span class="item-score">4 pts</span></label>
+                        <div class="notes">Botones con acciones específicas como "Comprar ahora", "Comparar productos"</div>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2><i class="fas fa-accessibility"></i> Accesibilidad</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item13" data-score="4">
+                        <label for="item13">El texto tiene suficiente contraste con el fondo <span class="item-score">4 pts</span></label>
+                        <div class="notes">Cumple con estándares WCAG para legibilidad</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item14" data-score="3">
+                        <label for="item14">Los textos alternativos en imágenes son descriptivos <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item15" data-score="5">
+                        <label for="item15">El lenguaje es inclusivo y no discriminatorio <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2><i class="fas fa-microcopy"></i> Microcopy Efectivo</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item16" data-score="3">
+                        <label for="item16">Placeholders en formularios son útiles y ejemplificadores <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item17" data-score="5">
+                        <label for="item17">Mensajes de confirmación y feedback son claros <span class="item-score">5 pts</span></label>
+                        <div class="notes">Por ejemplo, al agregar productos al carrito o completar una compra</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="item18" data-score="4">
+                        <label for="item18">Textos cortos que comunican efectivamente (etiquetas, tooltips) <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="praganz">
+            <div class="principles-info">
+                <h3><i class="fas fa-info-circle"></i> Ley de Prägnanz</h3>
+                <p>La Ley de Prägnanz establece que las personas percibimos las formas complejas de la manera más simple posible. Estos principios ayudan a evaluar si un diseño web es percibido de manera clara y sencilla por los usuarios.</p>
+            </div>
+            
+            <div class="checklist-container">
+                <div class="category prägnanz">
+                    <h2><i class="fas fa-object-group"></i> Principio de Semejanza</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item1" data-score="4">
+                        <label for="p-item1">Elementos similares se agrupan visualmente <span class="item-score">4 pts</span></label>
+                        <div class="notes">Los usuarios perciben elementos similares como relacionados</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item2" data-score="5">
+                        <label for="p-item2">Patrones consistentes en colores y formas para elementos similares <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category prägnanz">
+                    <h2><i class="fas fa-project-diagram"></i> Principio de Proximidad</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item3" data-score="5">
+                        <label for="p-item3">Elementos relacionados están cercanos entre sí <span class="item-score">5 pts</span></label>
+                        <div class="notes">La proximidad sugiere relación entre elementos</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item4" data-score="4">
+                        <label for="p-item4">Espaciado adecuado entre grupos de elementos <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category prägnanz">
+                    <h2><i class="fas fa-box-open"></i> Principio de Cerramiento</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item5" data-score="3">
+                        <label for="p-item5">Agrupación visual de elementos relacionados <span class="item-score">3 pts</span></label>
+                        <div class="notes">Uso de bordes o fondos para agrupar elementos relacionados</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item6" data-score="4">
+                        <label for="p-item6">Los elementos cerrados se perciben como un todo <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category prägnanz">
+                    <h2><i class="fas fa-stream"></i> Principio de Continuidad</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item7" data-score="4">
+                        <label for="p-item7">Flujo visual claro en la disposición de elementos <span class="item-score">4 pts</span></label>
+                        <div class="notes">Los ojos siguen naturalmente las líneas y curvas</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item8" data-score="5">
+                        <label for="p-item8">Alineación coherente que guía la vista del usuario <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category prägnanz">
+                    <h2><i class="fas fa-star"></i> Principio de Simetría</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item9" data-score="3">
+                        <label for="p-item9">Diseño equilibrado y armonioso <span class="item-score">3 pts</span></label>
+                        <div class="notes">La simetría crea sensación de orden y estabilidad</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item10" data-score="4">
+                        <label for="p-item10">Elementos simétricos se perciben como pertenecientes al mismo grupo <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category prägnanz">
+                    <h2><i class="fas fa-bars"></i> Principio de Figura-Fondo</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item11" data-score="5">
+                        <label for="p-item11">Contraste claro entre elementos principales y fondo <span class="item-score">5 pts</span></label>
+                        <div class="notes">Los elementos importantes se distinguen claramente del fondo</div>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="p-item12" data-score="4">
+                        <label for="p-item12">Jerarquía visual clara entre elementos <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="miller">
+            <div class="principles-info">
+                <h3><i class="fas fa-info-circle"></i> Ley de Miller</h3>
+                <p>La Ley de Miller establece que las personas pueden retener aproximadamente entre 5 y 9 elementos en su memoria de corto plazo. Un diseño debe reducir la carga cognitiva.</p>
+            </div>
+
+            <div class="checklist-container">
+                <div class="category miller">
+                    <h2><i class="fas fa-box-open"></i> Agrupación de Información</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item1" data-score="4">
+                        <label for="p-item1">La información está organizada en bloques pequeños <span class="item-score">4 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item2" data-score="5">
+                        <label for="p-item2">Las secciones complejas están divididas en partes <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category miller">
+                    <h2><i class="fas fa-project-diagram"></i> Menús y Opciones</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item3" data-score="5">
+                        <label for="p-item3">Los menús no contienen demasiadas opciones simultáneas <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item4" data-score="4">
+                        <label for="p-item4">Las categorías ayudan a reducir la carga mental <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category miller">
+                    <h2><i class="fas fa-object-group"></i> Memoria de Trabajo</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item5" data-score="3">
+                        <label for="p-item5">El usuario no debe memorizar datos entre pantallas <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item6" data-score="4">
+                        <label for="p-item6">La información importante permanece visible <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category miller">
+                    <h2><i class="fas fa-stream"></i> Chunking</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item7" data-score="4">
+                        <label for="p-item7">Los contenidos están agrupados lógicamente <span class="item-score">4 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item8" data-score="5">
+                        <label for="p-item8">Los formularios se dividen en pasos <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category miller">
+                    <h2><i class="fas fa-star"></i> Priorización</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item9" data-score="3">
+                        <label for="p-item9">La información importante destaca primero <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item10" data-score="4">
+                        <label for="p-item10">No existe sobrecarga visual <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category miller">
+                    <h2><i class="fas fa-bars"></i> Comprensión</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item11" data-score="5">
+                        <label for="p-item11">Los procesos largos están simplificados <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="m-item12" data-score="4">
+                        <label for="p-item12">El usuario comprende fácilmente cada paso <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+        <div class="tab-content" id="jakob">
+            <div class="principles-info">
+                <h3><i class="fas fa-info-circle"></i> Ley de Jakob</h3>
+                <p>La Ley de Jakob establece que los usuarios pasan la mayor parte de su tiempo en otros sitios web, por lo que preferirían que su sitio web funcionara de la misma manera que los sitios web con los que ya están familiarizados.</p>
+            </div>
+
+            <div class="checklist-container">
+                <div class="category jakob">
+                    <h2><i class="fas fa-stream"></i> Patrones Web</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item1" data-score="4">
+                        <label for="p-item1">La navegación sigue convenciones conocidas <span class="item-score">4 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item2" data-score="5">
+                        <label for="p-item2">Los usuarios identifican rápidamente el menú principal <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category jakob">
+                    <h2><i class="fas fa-project-diagram"></i> Comercio Electrónico</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item3" data-score="5">
+                        <label for="p-item3">El carrito de compras está ubicado donde los usuarios esperan encontrarlo <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item4" data-score="4">
+                        <label for="p-item4">Los procesos de compra siguen un flujo familiar <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category jakob">
+                    <h2><i class="fas fa-object-group"></i> Búsqueda</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item5" data-score="3">
+                        <label for="p-item5">La barra de búsqueda se encuentra en una ubicación esperada <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item6" data-score="4">
+                        <label for="p-item6">Los resultados se presentan de forma familiar <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category jakob">
+                    <h2><i class="fas fa-box-open"></i> Interacción</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item7" data-score="4">
+                        <label for="p-item7">Los botones se comportan como el usuario espera <span class="item-score">4 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item8" data-score="5">
+                        <label for="p-item8">Los enlaces tienen apariencia reconocible <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category jakob">
+                    <h2><i class="fas fa-star"></i> Diseño Familiar</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item9" data-score="3">
+                        <label for="p-item9">La estructura visual resulta familiar para el usuario <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item10" data-score="4">
+                        <label for="p-item10">Los iconos utilizados son ampliamente reconocidos <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category jakob">
+                    <h2><i class="fas fa-bars"></i> Aprendizaje</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item11" data-score="5">
+                        <label for="p-item11">Los usuarios aprenden rápidamente a utilizar la interfaz <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="j-item12" data-score="4">
+                        <label for="p-item12">No requiere capacitación adicional para navegar <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <div class="tab-content" id="fitts">
+            <div class="principles-info">
+                <h3><i class="fas fa-info-circle"></i> Ley de Fitts</h3>
+                <p>La Ley de Fitts establece que el tiempo necesario para alcanzar un objetivo depende de la distancia que hay que recorrer y del tamaño de dicho objetivo.</p>
+            </div>
+
+            <div class="checklist-container">
+                <div class="category fitts">
+                    <h2><i class="fas fa-box-open"></i> Tamaño de Objetivos</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item1" data-score="4">
+                        <label for="p-item1">Los botones principales tienen un tamaño adecuado <span class="item-score">4 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item2" data-score="5">
+                        <label for="p-item2">Los elementos importantes destacan visualmente <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category fitts">
+                    <h2><i class="fas fa-project-diagram"></i> Facilidad de Selección</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item3" data-score="5">
+                        <label for="p-item3">Los usuarios pueden hacer clic fácilmente en los controles <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item4" data-score="4">
+                        <label for="p-item4">No existen elementos demasiado pequeños <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category fitts">
+                    <h2><i class="fas fa-object-group"></i> Diseño Móvil</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item5" data-score="3">
+                        <label for="p-item5">Los botones son cómodos para tocar con el dedo <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item6" data-score="4">
+                        <label for="p-item6">Los controles táctiles tienen suficiente espacio <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category fitts">
+                    <h2><i class="fas fa-stream"></i> Distancia de Movimiento</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item7" data-score="4">
+                        <label for="p-item7">Las acciones frecuentes están cerca del usuario <span class="item-score">4 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item8" data-score="5">
+                        <label for="p-item8">No es necesario mover excesivamente el cursor <span class="item-score">5 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category fitts">
+                    <h2><i class="fas fa-star"></i> Eficiencia</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item9" data-score="3">
+                        <label for="p-item9">Las acciones importantes se realizan rápidamente <span class="item-score">3 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item10" data-score="4">
+                        <label for="p-item10">La interfaz minimiza movimientos innecesarios <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+                
+                <div class="category fitts">
+                    <h2><i class="fas fa-bars"></i> Acciones Prioritarias</h2>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item11" data-score="5">
+                        <label for="p-item11">Los botones principales son más accesibles que los secundarios <span class="item-score">5 pts</span></label>
+                    </div>
+                    
+                    <div class="check-item">
+                        <input type="checkbox" id="f-item12" data-score="4">
+                        <label for="p-item12">La ubicación de los controles favorece las tareas principales <span class="item-score">4 pts</span></label>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <div class="tab-content" id="results">
+            <div style="text-align: center; padding: 40px 20px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px;">Resultados de la Evaluación</h2>
+                <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 40px;">
+                    <div class="score-display" style="min-width: 200px;">
+                        <div class="score-value" id="ux-score">0</div>
+                        <div class="score-label">PUNTOS DE UX WRITING</div>
+                    </div>
+                    
+                    <div class="score-display" style="min-width: 200px;">
+                        <div class="score-value" id="p-score">0</div>
+                        <div class="score-label">PUNTOS DE PRÄGNANZ</div>
+                    </div>
+
+                    <div class="score-display" style="min-width: 200px;">
+                        <div class="score-value" id="m-score">0</div>
+                        <div class="score-label">PUNTOS DE MILLER</div>
+                    </div>
+                    
+                    <div class="score-display" style="min-width: 200px;">
+                        <div class="score-value" id="j-score">0</div>
+                        <div class="score-label">PUNTOS DE JAKOB</div>
+                    </div>
+
+                    <div class="score-display" style="min-width: 200px;">
+                        <div class="score-value" id="f-score">0</div>
+                        <div class="score-label">PUNTOS DE FITTS</div>
+                    </div>
+
+                    <div class="score-display" style="min-width: 200px;">
+                        <div class="score-value" id="total-score">0</div>
+                        <div class="score-label">PUNTUACIÓN TOTAL</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">Recomendaciones</h3>
+                    <div id="recommendations" style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                        <p>Completa la evaluación para obtener recomendaciones personalizadas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status">
+            <div class="progress">
+                <div class="progress-text">
+                    <span>Progreso general</span>
+                    <span id="progress-percentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-bar">0%</div>
+                </div>
+            </div>
+            
+            <div class="score-display">
+                <div class="score-value" id="total-score-display">0</div>
+                <div class="score-label">PUNTOS DE 278</div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn-save" id="save-btn">
+                    <i class="fas fa-save"></i> Guardar progreso
+                </button>
+                <button class="btn-reset" id="reset-btn">
+                    <i class="fas fa-redo"></i> Reiniciar lista
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            const totalScoreDisplay = document.getElementById('total-score-display');
+            const uxScoreElement = document.getElementById('ux-score');
+            const pScoreElement = document.getElementById('p-score');
+            const mScoreElement = document.getElementById('m-score');
+            const jScoreElement = document.getElementById('j-score');
+            const fScoreElement = document.getElementById('f-score');
+            const totalScoreElement = document.getElementById('total-score');
+            const recommendationsElement = document.getElementById('recommendations');
+            const resetBtn = document.getElementById('reset-btn');
+            const saveBtn = document.getElementById('save-btn');
+            
+            // Puntuación máxima posible
+            const maxScore = 278;
+            const uxMaxScore = 78;
+            const pMaxScore = 50;
+            const mMaxScore = 50;
+            const jMaxScore = 50;
+            const fMaxScore = 50;
+            
+            // Cambiar pestañas
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Cargar progreso guardado
+            loadProgress();
+            
+            // Actualizar barra de progreso y puntuación
+            function updateProgress() {
+                let totalScore = 0;
+                let uxScore = 0;
+                let pScore = 0;
+                let mScore = 0;
+                let jScore = 0;
+                let fScore = 0;
+                let checkedCount = 0;
+                
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const score = parseInt(checkbox.dataset.score);
+                        totalScore += score;
+                        
+                        if (checkbox.id.startsWith('p-')) {
+                            pScore += score;
+                        }
+                        else if (checkbox.id.startsWith('m-')) {
+                            mScore += score;
+                        }
+                        else if (checkbox.id.startsWith('j-')) {
+                            jScore += score;
+                        }
+                        else if (checkbox.id.startsWith('f-')) {
+                            fScore += score;
+                        } 
+                        else {
+                            uxScore += score;
+                        }
+                        
+                        checkedCount++;
+                    }
+                });
+                
+                const percentage = Math.round((checkedCount / checkboxes.length) * 100);
+                
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = percentage + '%';
+                progressPercentage.textContent = percentage + '%';
+                totalScoreDisplay.textContent = totalScore;
+                uxScoreElement.textContent = uxScore;
+                pScoreElement.textContent = pScore;
+                mScoreElement.textContent = mScore;
+                jScoreElement.textContent = jScore;
+                fScoreElement.textContent = fScore;
+                totalScoreElement.textContent = totalScore;
+                
+                // Cambiar color según el progreso
+                if (percentage < 30) {
+                    progressBar.style.background = 'linear-gradient(90deg, var(--danger) 0%, #c0392b 100%)';
+                } else if (percentage < 70) {
+                    progressBar.style.background = 'linear-gradient(90deg, var(--warning) 0%, #e67e22 100%)';
+                } else {
+                    progressBar.style.background = 'linear-gradient(90deg, var(--success) 0%, #27ae60 100%)';
+                }
+                
+                // Actualizar recomendaciones
+                updateRecommendations(uxScore, pScore, mScore, jScore, fScore, totalScore);
+                
+                // Guardar automáticamente el progreso
+                saveProgress();
+            }
+            
+            // Actualizar recomendaciones
+            function updateRecommendations(uxScore, pScore, mScore, jScore, fScore, totalScore) {
+                let recommendations = '';
+
+                if (totalScore === 0) {
+                    recommendations =
+                    '<p>Completa la evaluación para obtener recomendaciones personalizadas.</p>';
+                } else {
+                    recommendations += `<p><strong>UX Writing:</strong> ${uxScore}/78</p>`;
+                    recommendations += `<p><strong>Prägnanz:</strong> ${pScore}/50</p>`;
+                    recommendations += `<p><strong>Miller:</strong> ${mScore}/50</p>`;
+                    recommendations += `<p><strong>Jakob:</strong> ${jScore}/50</p>`;
+                    recommendations += `<p><strong>Fitts:</strong> ${fScore}/50</p>`;
+                    recommendations += `<hr>`;
+                    recommendations += `<p><strong>Total:</strong> ${totalScore}/278</p>`;
+
+                    if (uxScore < 36) {
+                        recommendations +=
+                        '<p>✍️ Mejorar claridad, consistencia y microcopys.</p>';
+                    }
+                    
+                    if (pScore < 25) {
+                        recommendations +=
+                        '<p>🎨 Mejorar agrupación visual, jerarquía y organización de elementos.</p>';
+                    }
+
+                    if (mScore < 25) {
+                        recommendations +=
+                        '<p>🧠 Reducir carga cognitiva y dividir mejor la información.</p>';
+                    }
+
+                    if (jScore < 25) {
+                        recommendations +=
+                        '<p>🌐 Utilizar patrones web más familiares para los usuarios.</p>';
+                    }
+
+                    if (fScore < 25) {
+                        recommendations +=
+                        '<p>🎯 Mejorar tamaño, accesibilidad y ubicación de botones y controles.</p>';
+                    }
+
+                    if (totalScore >= 220) {
+                        recommendations +=
+                        '<p style="color:green;"><strong>Excelente evaluación.</strong> El sitio cumple ampliamente los principios de UX Writing y UX.</p>';
+
+                    } else if (totalScore >= 170) {
+                        recommendations +=
+                        '<p style="color:#f39c12;"><strong>Buen resultado.</strong> Existen oportunidades puntuales de mejora.</p>';
+
+                    } else {
+                        recommendations +=
+                        '<p style="color:#e74c3c;"><strong>Resultado mejorable.</strong> Se recomienda revisar varias áreas de la experiencia de usuario.</p>';
+                    }
+                }
+
+                recommendationsElement.innerHTML = recommendations;
+            }
+
+            // Guardar progreso en localStorage
+            function saveProgress() {
+                const progress = {};
+                checkboxes.forEach((checkbox, index) => {
+                    progress[checkbox.id] = checkbox.checked;
+                });
+                localStorage.setItem('uxWritingPraganzChecklist', JSON.stringify(progress));
+            }
+            
+            // Cargar progreso desde localStorage
+            function loadProgress() {
+                const savedProgress = JSON.parse(localStorage.getItem('uxWritingPraganzChecklist'));
+                if (savedProgress) {
+                    checkboxes.forEach(checkbox => {
+                        if (savedProgress[checkbox.id]) {
+                            checkbox.checked = savedProgress[checkbox.id];
+                        }
+                    });
+                }
+                updateProgress();
+            }
+            
+            // Reiniciar lista
+            resetBtn.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres reiniciar toda la lista? Se perderán todas las puntuaciones.')) {
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    updateProgress();
+                    // Guardar estado reiniciado
+                    saveProgress();
+                }
+            });
+            
+            // Guardar manualmente
+            saveBtn.addEventListener('click', function() {
+                saveProgress();
+                // Efecto visual de guardado
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> ¡Guardado!';
+                saveBtn.style.background = '#2ecc71';
+                setTimeout(() => {
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar progreso';
+                    saveBtn.style.background = '';
+                }, 1500);
+            });
+            
+            // Actualizar progreso cuando cambia cualquier checkbox
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+        });
+    </script>
+</body>
+</html>
